@@ -1,0 +1,67 @@
+Eye Tracker (c) Atosoft++ 2010
+Alex Barry - alex.barry@gmail.com
+July 22, 2010
+
+'Ello, Ladies and Gents,
+
+This is my first official software release (most of my stuff has just been me tinkering around).
+
+First, to address the licensing issue, this code is currently under no license, aside from the individual libraries that are licensed (SDL, OpenCV, Standard C Libraries).
+
+To compile this, you will need the following libraries:
+OpenCV 2.1				http://opencv.willowgarage.com/
+SDL 1.3					http://www.libsdl.org/
+SDL_ttf (built against SDL 1.3)		http://www.libsdl.org/projects/SDL_ttf/
+
+-- LINUX USERS --
+You will need to download OpenCV 2.1 and install it, either through your repos manager or compiling/installing the source packages.
+SDL 1.3 will need to be installed - I installed it to "~/.SDL/" but as long as you know where you install it and change the location in the makefil/Code::Blocks project, you'll be fine.
+I used the mercurial version of SDL 1.3, but I think the source package available for download will work just as well, too.  If you're not sure how to make it install to a custom directory,
+do this:
+	./configure --prefix=/where/you/want/SDL-1.3/installed
+	make && make install
+
+To build SDL_ttf against SDL 1.3:
+	./configure --with-sdl-prefix=/where/you/installed/SDL-1.3 --prefix=/where/you/installed/SDL-1.3
+	make && make install
+
+Voila, you're set to the races - just make sure you set the library paths to where you installed SDL so it uses that instead of SDL 1.2 binaries/headers.
+
+-- WINDOWS USERS --
+Download the binary packages for OpenCV 2.1 and SDL 1.3, and install them.
+
+If you use Code::Blocks, open the project, and change the compiler/linker search paths to where you installed OpenCV and SDL, respectively.
+I don't know if SDL_ttf has a binary package that has been built against SDL 1.3, so either you'll have to figure that out manually, or google to see if they exist on the internet somewhere.
+
+-- Hardware --
+I used a similar design as the EyeWriter Initiative's setup, specifically using the PS3Eye Camera (which works very amazingly).  I will note that through the code laboratory's drivers in
+WindowsXP, I had a pile of trouble, and that's why I ended up developing this project in linux (the PS3Eye was basically plug and play in Fedora 12 and Ubuntu 10).  I found the EyeWriter's
+building guide to be very sporatic and inconsistent (sketches didn't line up with actual pictures, the parts list was not descriptive), so I'll give you my list of materials, and hopefully
+it makes sense:
+Welding Rod - chipped off the welding stuff to expose the rod, sanded it down.
+PS3Eye Camera, with a infrared bypass filter - You have to rip open the camera, take out the infrared filter, put in the infrared bypass, and you're set.  For the bypass, I'm just using a
+		piece of floppy disc memory thing (rip the flippy disc open, and see the black/brown filmy-stuff...that's what I mean) I cut, squared, and popped into the PS3Eye Lens.
+2 IR LEDs - I picked these up at RadioShack/The Source, from remote control repair kits, but you can buy them cheaper, in bulk, on eBay.
+AAA Batter Holder - Should generate 3V from 2 AAA batteries, which will power the 2 IR LEDs.
+Small power switch - This is optional, but it's nice to not have to take the batteries out all the time to turn off the IR LEDs
+Cheap sunglasses - any pair will do - you'll have to pop the lenses out
+Epoxy - To mount the rod onto the glasses' handle
+Wireties - keep those wires under control!
+Small Circuit/Bread Board - not necessary, but it makes things easier for wiring.
+
+I'll do a better write-up for building later, don't worry.  If I don't, you can harrass my via email :D
+
+-- The Program --
+I wrote my own GUI code - it's very minimalistic, but to give you a quick run down:
+On the tool bar window, you have three slider bars: the top is gamma control (0.0-5.0), the two below it are brightness and contrast (0.0-1.0), respectively.
+You'll almost certainly have to monkey around with those values to get something that detects your pupils right away - I'll make something that saves those preferences so you don't have to
+horse around all the time to get it right.
+I haven't written the calibration code, or eye tracking code yet, so for the time being, this is just a tinker toy that guesses what part of the picture is the pupil, although it will do a
+whole lot more once I get the eye tracking stuff a little more perfected.
+
+
+-- The End --
+I'll give you more information when it's not 1:00am after a long day.
+
+Take care,
+-Alex
