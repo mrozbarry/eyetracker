@@ -1,0 +1,290 @@
+# depslib dependency file v1.0
+1279843394 source:/home/jon/jon-ui/eyetracker/eyestracker/main.c
+	<stdio.h>
+	<stdlib.h>
+	<memory.h>
+	<math.h>
+	<opencv/cv.h>
+	<opencv/highgui.h>
+	<SDL/SDL.h>
+	<SDL/SDL_ttf.h>
+	"ui-context.h"
+	"ui-webcam.h"
+	"ui-label.h"
+	"ui-cvimage.h"
+	"ui-slider.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_loadso.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_rwops.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"SDL_compat.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<iconv.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_config.h
+	"SDL_platform.h"
+	<stdarg.h>
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/begin_code.h
+
+1279408735 /home/jon/.SDL/include/SDL/close_code.h
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_endian.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_quit.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_pixels.h
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keysym.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_keysym.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_scancode.h
+	"SDL_stdinc.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_version.h
+	"SDL_stdinc.h"
+	"SDL_revision.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_revision.h
+
+1279408735 /home/jon/.SDL/include/SDL/SDL_compat.h
+	"SDL_video.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279503589 /home/jon/.SDL/include/SDL/SDL_ttf.h
+	"SDL.h"
+	"begin_code.h"
+	"close_code.h"
+
+1279767794 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-widget.c
+	"ui-widget.h"
+
+1279767719 /home/jon/jon-ui/eyetracker/eyestracker/ui-widget.h
+	<SDL/SDL.h>
+
+1279772161 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-webcam.c
+	"ui-webcam.h"
+	"ui-cvimage.h"
+
+1279724973 /home/jon/jon-ui/eyetracker/eyestracker/ui-webcam.h
+	"ui-widget.h"
+	<opencv/cv.h>
+	<opencv/highgui.h>
+
+1279767823 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-context.c
+	"ui-context.h"
+
+1279722396 /home/jon/jon-ui/eyetracker/eyestracker/ui-context.h
+	<SDL/SDL.h>
+	"ui-widget.h"
+
+1279741813 /home/jon/jon-ui/eyetracker/eyestracker/ui-label.h
+	"ui-widget.h"
+	<SDL/SDL_ttf.h>
+
+1279744234 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-label.c
+	"ui-label.h"
+
+1279771086 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-cvimage.c
+	"ui-cvimage.h"
+
+1279771031 /home/jon/jon-ui/eyetracker/eyestracker/ui-cvimage.h
+	"ui-widget.h"
+	<opencv/cv.h>
+	<opencv/highgui.h>
+
+1279843333 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-slider.c
+	"ui-slider.h"
+
+1279843324 /home/jon/jon-ui/eyetracker/eyestracker/ui-slider.h
+	"ui-widget.h"
+
