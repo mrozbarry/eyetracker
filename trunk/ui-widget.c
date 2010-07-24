@@ -1,3 +1,16 @@
+/*
+ *		Eyetracker - Copyright 2010 by Alex Barry ( alex DOT barry AT gmail DOT com )
+ *		Eye Tracking Using OpenCV and Rendered using SDL
+ *		LGPL License
+ *
+ *		This software is distributed "as-is" without any warranty of any kind.
+ *		You are granted permission to:
+ *			- Redistribute/Change this softare..
+ *				- As long as you make a reference to this project, and clearly mark what has been changed
+ *			- Use portions of this software...
+ *				- As long as you give myself and other authors of this software credit
+ *		Please read the included LICENSE file for more information.
+ */
 
 #include "ui-widget.h"
 
@@ -16,6 +29,8 @@ ui_widget *ui_newwidget( char *name, int type, void *widgetClass ) {
 	widget->event = (ui_event *)malloc( sizeof( ui_event ) );
 
 	widget->texture = NULL;
+
+	widget->visible = 1;
 
 	widget->onDestroy = NULL;
 	widget->onRedraw = NULL;
@@ -80,7 +95,6 @@ void ui_addwidgetevent( ui_widget *widget, int type, void *callback ) {
 }
 
 void ui_updatewidget( ui_widget *widget ) {
-	if( !widget ) return;
 	ui_dowidgetredraw( widget );
 }
 
@@ -131,6 +145,7 @@ void ui_dowidgetredraw( ui_widget *widget ) {
 }
 
 void ui_dowidgetclick( ui_widget *widget, int x, int y, int button, int state ) {
+	if( !widget ) return;
 	ui_cbWidgetMouse click = NULL;
 	int i = 0;
 	for( i = 0; i < widget->events; i++ ) {
@@ -142,6 +157,7 @@ void ui_dowidgetclick( ui_widget *widget, int x, int y, int button, int state ) 
 }
 
 void ui_dowidgetmousein( ui_widget *widget, int x, int y, int button, int state ) {
+	if( !widget ) return;
 	ui_cbWidgetMouse mousein = NULL;
 	int i = 0;
 	for( i = 0; i < widget->events; i++ ) {
@@ -153,6 +169,7 @@ void ui_dowidgetmousein( ui_widget *widget, int x, int y, int button, int state 
 }
 
 void ui_dowidgetmouseout( ui_widget *widget, int x, int y, int button, int state ) {
+	if( !widget ) return;
 	ui_cbWidgetMouse mouseout = NULL;
 	int i = 0;
 	for( i = 0; i < widget->events; i++ ) {
@@ -164,6 +181,7 @@ void ui_dowidgetmouseout( ui_widget *widget, int x, int y, int button, int state
 }
 
 void ui_dowidgetmousemove( ui_widget *widget, int x, int y, int button, int state ) {
+	if( !widget ) return;
 	ui_cbWidgetMouse mousemove = NULL;
 	int i = 0;
 	for( i = 0; i < widget->events; i++ ) {

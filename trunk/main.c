@@ -30,12 +30,12 @@
 #include "ui-label.h"
 #include "ui-cvimage.h"
 #include "ui-slider.h"
+#include "ui-toggle.h"
 
 // -- Structures/Enums
 typedef enum trackermode {
 	TM_IDLE = 0,								// Display webcam, and tracking points if applicable
-	TM_SET_TEMPLATES,							// Setup tracking points
-	TM_SET_CALIBRATION,							// Set calibration points
+	TM_CALIBRATE,								// Set calibration points
 	TM_TRACK,									// Test tracking
 	TM_QUIT,									// Exit program
 	TM_LASTMODE									// Size of array needed to hold above elements
@@ -60,7 +60,15 @@ typedef struct cvblob {
 	uicvpt		*point;
 } cvblob;
 
+typedef struct calibratepoint {
+	uicvpt		screen;
+	uicvpt		eye;
+} calibratepoint;
+
 // -- Function Prototypes
+void setupUI( void );
+void switchmode( int m );
+
 void sortBlobs( CvSeq *blob[], int num );
 
 void onchange_gamma( ui_widget *widget, float value );
@@ -68,17 +76,22 @@ void onchange_brightness( ui_widget *widget, float value );
 void onchange_contrast( ui_widget *widget, float value );
 void onchange_threshold( ui_widget *widget, float value );
 
+void onclick_showthresh( ui_widget *widget, int x, int y, int button, int state );
+
 void load_lastvalues( void );
 void save_currentvalues( void );
 
 // -- Global variables
-SDL_Window		*wnd;									// Main SDL Window
 IplImage		*frame;									// Camera frame being processed
 int				mode = TM_IDLE;							// Program Mode
 uicvpt			eyepoint, norm_eyepoint;
-ui_widget		*lblgamma, *lblbrightness, *lblcontrast, *lblthreshold;
+ui_ctx			*context[context_EOA];
+ui_widget		*camera, *camtransform, *lblgamma, *lblbrightness, *lblcontrast, *lblthreshold, *showthresh;
 float			gbc[3] = { 1.0, 0.0, 0.0 };
 float			threshold = 75.0f;
+calibratepoint	calibrate[5][5];
+
+#define SETTINGSFILE	"settings.cfg"
 
 #define RESX		1024
 #define RESY		768
@@ -86,7 +99,6 @@ float			threshold = 75.0f;
 // -- Program Entry Point
 int main( int argc, char *argv[] ) {
 	SDL_Event	event;
-	ui_ctx		*context[context_EOA];
 	SDL_Window	*window = NULL;
 
 
@@ -100,49 +112,12 @@ int main( int argc, char *argv[] ) {
     }
 
 	// -- Setup the UI to default startups
-    context[context_setup] = ui_newcontext( "Eye Tracker Setup", 1, SDL_WINDOWPOS_CENTERED, RESX, RESY, 0 );
-    context[context_config] = ui_newcontext( "Configure", RESX + 10, SDL_WINDOWPOS_CENTERED, 200, RESY, SDL_WINDOW_RESIZABLE );
-    context[context_showgrey] = ui_newcontext( "Tracking Image", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0 );
-    context[context_main] = ui_newcontext( "Eye Tracker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RESX, RESY, 0 );
-
-	ui_setcontextvisible( context[context_setup], 1 );
-	ui_setcontextvisible( context[context_config], 1 );
-	ui_setcontextvisible( context[context_showgrey], 1 );
-	ui_setcontextvisible( context[context_main], 0 );
-
-    ui_widget *camera = ui_newcontextwidget( context[context_setup], ui_newwebcam( "webcam", -1 ) );
-    ui_setwidgetposition( camera, (RESX-640)/2, (RESY-480)/2 );
-    int w, h; ui_getwebcamframesize( camera, &w, &h );
-    ui_widget *camtransform = ui_newcontextwidget( context[context_showgrey], ui_newcvimage( "webcam0", w, h, 8, 1 ) );
-    ui_setwidgetposition( camera, 0, 0 );
-
-	lblgamma = ui_newcontextwidget( context[context_config], ui_newlabel( "lblGamma", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Gamma(0.0)", 1, 255, 255, 255 ) );
-	ui_setwidgetposition( lblgamma, 5, 20 );
-    ui_widget *gamma = ui_newcontextwidget( context[context_config], ui_newslider( "gamma", 0.0, 5.0, 0.0, 190, &onchange_gamma ) );
-	ui_setwidgetposition( gamma, 5, 40 );
-	ui_setslidervalue( gamma, gbc[0] );
-
-	lblbrightness = ui_newcontextwidget( context[context_config], ui_newlabel( "lblBrightness", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Brightness(0.0)", 1, 255, 255, 255 ) );
-	ui_setwidgetposition( lblbrightness, 5, 70 );
-    ui_widget *brightness = ui_newcontextwidget( context[context_config], ui_newslider( "brightness", -1.0, 1.0, 0.0, 190, &onchange_brightness ) );
-	ui_setwidgetposition( brightness, 5, 90 );
-	ui_setslidervalue( brightness, gbc[1] );
-
-	lblcontrast = ui_newcontextwidget( context[context_config], ui_newlabel( "lblContrast", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Contrast(0.0)", 1, 255, 255, 255 ) );
-	ui_setwidgetposition( lblcontrast, 5, 120 );
-    ui_widget *contrast = ui_newcontextwidget( context[context_config], ui_newslider( "contrast", -1.0, 1.0, 0.0, 190, &onchange_contrast ) );
-	ui_setwidgetposition( contrast, 5, 140 );
-	ui_setslidervalue( contrast, gbc[2] );
-
-	lblthreshold = ui_newcontextwidget( context[context_config], ui_newlabel( "lblThreshold", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Threshold(0.0)", 1, 255, 255, 255 ) );
-	ui_setwidgetposition( lblthreshold, 5, 190 );
-    ui_widget *wthreshold = ui_newcontextwidget( context[context_config], ui_newslider( "threshold", 0.0, 255.0, 0.0, 190, &onchange_threshold ) );
-	ui_setwidgetposition( wthreshold, 5, 210 );
-	ui_setslidervalue( wthreshold, threshold );
+	load_lastvalues();
+	setupUI();
 
 	IplImage *imgtransform;
 	CvMemStorage *storage = cvCreateMemStorage(0);
-	CvMoments myMoments; // = (CvMoments *)malloc( sizeof( CvMoments * ) );
+	CvMoments myMoments;
 	int i = 0, j = 0;
 	while( mode != TM_QUIT ) {
 		// **** This part of the code was taken from the EyeWriter Project and chunks of OpenFrameworks
@@ -167,13 +142,10 @@ int main( int argc, char *argv[] ) {
 			int numblobs = _blobs > 100 ? 100 : _blobs;
 			cvblob blobs[numblobs];
 			IplImage *frame = UI_CAST_WEBCAM( camera )->frame;
-			printf( "\n----------\n" );
 			for( i = 0; i < numblobs; i++ ) {
 				float _area = cvContourArea( _blob[i], CV_WHOLE_SEQ, 0 );
 				CvRect rect	= cvBoundingRect( _blob[i], 0 );
 				cvMoments( _blob[i], &myMoments, 0 );
-
-				printf( "%d. Area: %.2f\n", i+1, fabs( _area ) );
 
 				blobs[i].area = fabs(_area);
 				blobs[i].hole = _area < 0 ? 1 : 0;
@@ -188,8 +160,6 @@ int main( int argc, char *argv[] ) {
 				blobs[i].point = (uicvpt *)malloc( sizeof( uicvpt ) * blobs[i].points );
 
 
-				//cvRectangle(frame, cvPoint( rect.x, rect.y ), cvPoint( rect.x+rect.width, rect.y+rect.height ), CV_RGB( 0, 255, 0 ), 1, 8, 0 );
-
 				uicvpt pt;
 				CvSeqReader reader;
 				cvStartReadSeq( _blob[i], &reader, 0 );
@@ -200,18 +170,17 @@ int main( int argc, char *argv[] ) {
 					blobs[i].point[j].y = pt.y;
 				}
 
-				float ratio = blobs[i].boundingRect.w < blobs[i].boundingRect.h ?
-								(float)blobs[i].boundingRect.w / (float)blobs[i].boundingRect.h :
-								(float)blobs[i].boundingRect.h / (float)blobs[i].boundingRect.w;
+				float ratio = blobs[i].boundingRect.w < blobs[i].boundingRect.h ? (float)blobs[i].boundingRect.w / (float)blobs[i].boundingRect.h : (float)blobs[i].boundingRect.h / (float)blobs[i].boundingRect.w;
 				float compactness = ( ( (float)blobs[i].length*(float)blobs[i].length/(float)blobs[i].area)/(float)FOUR_PI);
-				printf( " -> Ratio: %.3f Compactness: %.1f\n", ratio, compactness );
+
 				if( compactness > 5 ) continue;
 				if( ratio > 0.5f ) {
 					eyepoint = blobs[i].centroid;
 					norm_eyepoint.x = eyepoint.x / frame->width;
 					norm_eyepoint.y = eyepoint.y / frame->height;
 
-					cvRectangle(frame, cvPoint( rect.x, rect.y ), cvPoint( rect.x+rect.width, rect.y+rect.height ), CV_RGB( 255, 0, 0 ), 1, 8, 0 );
+					if( mode == TM_IDLE )
+						cvRectangle(frame, cvPoint( rect.x, rect.y ), cvPoint( rect.x+rect.width, rect.y+rect.height ), CV_RGB( 255, 0, 0 ), 1, 8, 0 );
 
 					break; // Yay, we're finally done!
 				}
@@ -230,18 +199,25 @@ int main( int argc, char *argv[] ) {
 				break;
 			case SDL_KEYDOWN:
 				if( event.key.keysym.sym == SDLK_ESCAPE ) mode = TM_QUIT;
+				if( event.key.keysym.sym == SDLK_1 ) switchmode( TM_IDLE );
+				if( event.key.keysym.sym == SDLK_2 ) switchmode( TM_CALIBRATE );
+				if( event.key.keysym.sym == SDLK_3 ) switchmode( TM_TRACK );
 				break;
 			case SDL_MOUSEMOTION:
-				window = SDL_GetWindowFromID( event.motion.windowID );
-				for( i = 0; i < context_EOA; i++ ) {
-					if( ui_iscontextfocused( context[i], window ) ) ui_applycontextevent( context[i], &event );
+				if( mode == TM_IDLE ) {
+					window = SDL_GetWindowFromID( event.motion.windowID );
+					for( i = 0; i < context_EOA; i++ ) {
+						if( ui_iscontextfocused( context[i], window ) ) ui_applycontextevent( context[i], &event );
+					}
 				}
 				break;
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
-				window = SDL_GetWindowFromID( event.button.windowID );
-				for( i = 0; i < context_EOA; i++ ) {
-					if( ui_iscontextfocused( context[i], window ) ) ui_applycontextevent( context[i], &event );
+				if( mode == TM_IDLE ) {
+					window = SDL_GetWindowFromID( event.button.windowID );
+					for( i = 0; i < context_EOA; i++ ) {
+						if( ui_iscontextfocused( context[i], window ) ) ui_applycontextevent( context[i], &event );
+					}
 				}
 				break;
 			}
@@ -252,6 +228,8 @@ int main( int argc, char *argv[] ) {
 
 	for( i = 0; i < context_EOA; i++ ) ui_deletecontext( context[i] );
 
+	save_currentvalues();
+
 
 	//cleanObjects();
 	cvReleaseMemStorage( &storage );
@@ -260,6 +238,76 @@ int main( int argc, char *argv[] ) {
 	SDL_Quit();
 
 	return 0;
+}
+
+void setupUI( void ) {
+	context[context_setup] = ui_newcontext( "Eye Tracker Setup", 1, SDL_WINDOWPOS_CENTERED, RESX, RESY, 0 );
+	context[context_config] = ui_newcontext( "Configure", RESX + 10, SDL_WINDOWPOS_CENTERED, 200, 300, SDL_WINDOW_RESIZABLE );
+	context[context_showgrey] = ui_newcontext( "Tracking Image", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, 0 );
+	context[context_main] = ui_newcontext( "Eye Tracker", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, RESX, RESY, SDL_WINDOW_BORDERLESS );
+
+	ui_setcontextvisible( context[context_setup], 1 );
+	ui_setcontextvisible( context[context_config], 1 );
+	ui_setcontextvisible( context[context_showgrey], 1 );
+	ui_setcontextvisible( context[context_main], 0 );
+
+	camera = ui_newcontextwidget( context[context_setup], ui_newwebcam( "webcam", -1 ) );
+	ui_setwidgetposition( camera, (RESX-640)/2, (RESY-480)/2 );
+	int w, h; ui_getwebcamframesize( camera, &w, &h );
+	camtransform = ui_newcontextwidget( context[context_showgrey], ui_newcvimage( "webcam0", w, h, 8, 1 ) );
+	ui_setwidgetposition( camera, 0, 0 );
+
+	lblgamma = ui_newcontextwidget( context[context_config], ui_newlabel( "lblGamma", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Gamma(0.0)", 1, 255, 255, 255 ) );
+	ui_setwidgetposition( lblgamma, 5, 20 );
+	ui_widget *gamma = ui_newcontextwidget( context[context_config], ui_newslider( "gamma", 0.0, 5.0, 0.0, 190, &onchange_gamma ) );
+	ui_setwidgetposition( gamma, 5, 40 );
+	ui_setslidervalue( gamma, gbc[0] );
+
+	lblbrightness = ui_newcontextwidget( context[context_config], ui_newlabel( "lblBrightness", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Brightness(0.0)", 1, 255, 255, 255 ) );
+	ui_setwidgetposition( lblbrightness, 5, 70 );
+	ui_widget *brightness = ui_newcontextwidget( context[context_config], ui_newslider( "brightness", -1.0, 1.0, 0.0, 190, &onchange_brightness ) );
+	ui_setwidgetposition( brightness, 5, 90 );
+	ui_setslidervalue( brightness, gbc[1] );
+
+	lblcontrast = ui_newcontextwidget( context[context_config], ui_newlabel( "lblContrast", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Contrast(0.0)", 1, 255, 255, 255 ) );
+	ui_setwidgetposition( lblcontrast, 5, 120 );
+	ui_widget *contrast = ui_newcontextwidget( context[context_config], ui_newslider( "contrast", -1.0, 1.0, 0.0, 190, &onchange_contrast ) );
+	ui_setwidgetposition( contrast, 5, 140 );
+	ui_setslidervalue( contrast, gbc[2] );
+
+	lblthreshold = ui_newcontextwidget( context[context_config], ui_newlabel( "lblThreshold", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Threshold(0.0)", 1, 255, 255, 255 ) );
+	ui_setwidgetposition( lblthreshold, 5, 190 );
+	ui_widget *wthreshold = ui_newcontextwidget( context[context_config], ui_newslider( "threshold", 0.0, 255.0, 0.0, 190, &onchange_threshold ) );
+	ui_setwidgetposition( wthreshold, 5, 210 );
+	ui_setslidervalue( wthreshold, threshold );
+
+	showthresh = ui_newcontextwidget( context[context_config], ui_newtoggle( "tglShowThresh", TTF_OpenFont( "WHITRABT.ttf", 12 ), "Show Threshold Window", 1, 255, 255, 255 ) );
+	ui_setwidgetposition( showthresh, 5, 260 );
+	ui_addwidgetevent( showthresh, ui_event_click, &onclick_showthresh );
+}
+
+void switchmode( int m ) {
+	mode = m;
+	switch( mode ) {
+	case TM_IDLE:
+		ui_setcontextvisible( context[context_config], 1 );
+		ui_setcontextvisible( context[context_setup], 1 );
+		int vis = 0; ui_gettogglevalue( showthresh, &vis );
+		ui_setcontextvisible( context[context_setup], vis );
+		SDL_SetWindowFullscreen( context[context_main]->window, 0 );
+		ui_setcontextvisible( context[context_main], 0 );
+		SDL_EnableScreenSaver();
+		break;
+	case TM_CALIBRATE:
+	case TM_TRACK:
+		ui_setcontextvisible( context[context_config], 0 );
+		ui_setcontextvisible( context[context_setup], 0 );
+		ui_setcontextvisible( context[context_setup], 0 );
+		ui_setcontextvisible( context[context_main], 1 );
+		SDL_DisableScreenSaver();
+		SDL_SetWindowFullscreen( context[context_main]->window, 1 );
+		break;
+	}
 }
 
 void sortBlobs( CvSeq *arr[], int num ) {
@@ -316,8 +364,45 @@ void onchange_threshold( ui_widget *widget, float value ) {
 	ui_setlabeltext( lblthreshold, tmpText );
 }
 
+void onclick_showthresh( ui_widget *widget, int x, int y, int button, int state ) {
+	int value = 0;
+	ui_gettogglevalue( widget, &value );
+	ui_setcontextvisible( context[ context_showgrey], value );
+}
+
 void load_lastvalues( void ) {
+	FILE *settings = fopen( SETTINGSFILE, "r" );
+	if( !settings ) return;
+
+	char	line[64];
+	char	variable[32];
+	float	value;
+
+	int i = 0;
+	for( i = 0; i < 4; i++ ) {
+		if( fgets( line, 64, settings ) == NULL ) return;
+		sscanf( line, "%s %f\n", variable, &value );
+		if( strcmp( variable, "gamma" ) == 0 ) {
+			gbc[0] = value;
+		} else if( strcmp( variable, "brightness" ) == 0 ) {
+			gbc[1] = value;
+		} else if( strcmp( variable, "contrast" ) == 0 ) {
+			gbc[2] = value;
+		} else if( strcmp( variable, "threshold" ) == 0 ) {
+			threshold = value;
+		}
+	}
+
+	fclose( settings );
 }
 
 void save_currentvalues( void ) {
+	FILE *settings = fopen( SETTINGSFILE, "w" );
+
+	fprintf( settings, "%s %f\n", "gamma", gbc[0] );
+	fprintf( settings, "%s %f\n", "brightness", gbc[1] );
+	fprintf( settings, "%s %f\n", "contrast", gbc[2] );
+	fprintf( settings, "%s %f\n", "threshold", threshold );
+
+	fclose( settings );
 }

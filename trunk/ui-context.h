@@ -1,3 +1,16 @@
+/*
+ *		Eyetracker - Copyright 2010 by Alex Barry ( alex DOT barry AT gmail DOT com )
+ *		Eye Tracking Using OpenCV and Rendered using SDL
+ *		LGPL License
+ *
+ *		This software is distributed "as-is" without any warranty of any kind.
+ *		You are granted permission to:
+ *			- Redistribute/Change this softare..
+ *				- As long as you make a reference to this project, and clearly mark what has been changed
+ *			- Use portions of this software...
+ *				- As long as you give myself and other authors of this software credit
+ *		Please read the included LICENSE file for more information.
+ */
 
 #include <SDL/SDL.h>
 #include "ui-widget.h"
@@ -20,6 +33,9 @@ typedef struct ui_ctx {
 
 	ui_widget		*selected;
 	ui_widget		*hovered;
+
+	Uint32			set_tag;
+	ui_widget		*tag;
 } ui_ctx;
 
 ui_ctx		*ui_newcontext( char *name, int x, int y, int w, int h, Uint32 flags );

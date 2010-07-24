@@ -1,0 +1,17 @@
+CHANGELOG
+
+== Friday July 23, 2010 12:24 GMT-5 ==
+	NEW
+		* Added new modes: Now there is TM_IDLE (default setup area), TM_CALIBRATE (calibration interface), TM_TRACKING (estimate gaze on screen) : Alex
+		* Relatively complete setup/TM_IDLE interface : Alex
+		* New ability to save settings/load previous settings (currently automatic, but may become selectable in later versions...) : Alex
+		* Calibration-ready (See WAITING notes)
+	WAITING
+		* TM_CALIBRATE mode - currently on my linux box, SDL 1.3's Window/Fullscreen mode does not fill the screen (Ubuntu/Gnome's panel covers the top and bottom of the screen still).  Setting OpenGL mode might fix this, but I don't want to use OpenGL unless I have to.
+		* TM_TRACKING mode - dependent on TM_CALIBRATE, so I'll have to wait until this bug is addressed.
+	TODO
+		* Create main/TM_TRACKING interface for the user
+			* Should be able to bring up a virtual keyboard to type letters/maybe some pre-set words?
+		* Setup a grid interface for TM_TRACKING
+			* Instead of the eyes looking at a specific point, it should be looking at a specific rectangle - this will avoid frustration of OpenCV detecting a lot of jittering from the eyes
+		
