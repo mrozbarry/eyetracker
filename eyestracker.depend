@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1279843394 source:/home/jon/jon-ui/eyetracker/eyestracker/main.c
+1279901899 source:/home/jon/jon-ui/eyetracker/eyestracker/main.c
 	<stdio.h>
 	<stdlib.h>
 	<memory.h>
@@ -13,6 +13,7 @@
 	"ui-label.h"
 	"ui-cvimage.h"
 	"ui-slider.h"
+	"ui-toggle.h"
 
 1279408735 /home/jon/.SDL/include/SDL/SDL.h
 	"SDL_main.h"
@@ -245,10 +246,10 @@
 	"begin_code.h"
 	"close_code.h"
 
-1279767794 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-widget.c
+1279857700 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-widget.c
 	"ui-widget.h"
 
-1279767719 /home/jon/jon-ui/eyetracker/eyestracker/ui-widget.h
+1279857550 /home/jon/jon-ui/eyetracker/eyestracker/ui-widget.h
 	<SDL/SDL.h>
 
 1279772161 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-webcam.c
@@ -260,18 +261,18 @@
 	<opencv/cv.h>
 	<opencv/highgui.h>
 
-1279767823 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-context.c
+1279863354 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-context.c
 	"ui-context.h"
 
-1279722396 /home/jon/jon-ui/eyetracker/eyestracker/ui-context.h
+1279857507 /home/jon/jon-ui/eyetracker/eyestracker/ui-context.h
 	<SDL/SDL.h>
 	"ui-widget.h"
 
-1279741813 /home/jon/jon-ui/eyetracker/eyestracker/ui-label.h
+1279859320 /home/jon/jon-ui/eyetracker/eyestracker/ui-label.h
 	"ui-widget.h"
 	<SDL/SDL_ttf.h>
 
-1279744234 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-label.c
+1279861484 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-label.c
 	"ui-label.h"
 
 1279771086 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-cvimage.c
@@ -287,4 +288,11 @@
 
 1279843324 /home/jon/jon-ui/eyetracker/eyestracker/ui-slider.h
 	"ui-widget.h"
+
+1279863331 source:/home/jon/jon-ui/eyetracker/eyestracker/ui-toggle.c
+	"ui-toggle.h"
+
+1279861343 /home/jon/jon-ui/eyetracker/eyestracker/ui-toggle.h
+	"ui-widget.h"
+	<SDL/SDL_ttf.h>
 

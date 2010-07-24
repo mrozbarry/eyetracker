@@ -1,3 +1,16 @@
+/*
+ *		Eyetracker - Copyright 2010 by Alex Barry ( alex DOT barry AT gmail DOT com )
+ *		Eye Tracking Using OpenCV and Rendered using SDL
+ *		LGPL License
+ *
+ *		This software is distributed "as-is" without any warranty of any kind.
+ *		You are granted permission to:
+ *			- Redistribute/Change this softare..
+ *				- As long as you make a reference to this project, and clearly mark what has been changed
+ *			- Use portions of this software...
+ *				- As long as you give myself and other authors of this software credit
+ *		Please read the included LICENSE file for more information.
+ */
 
 #include "ui-label.h"
 
@@ -44,6 +57,7 @@ void __redrawlabel( ui_widget *widget ) {
 	SDL_Surface *surface = SDL_CreateRGBSurface( 0, widget->rect.w, widget->rect.h, 24, 0, 0, 0, 0 );
 	SDL_BlitSurface( textdrawing, NULL, surface, NULL );
 
+	if( widget->texture ) SDL_DestroyTexture( widget->texture );
 	widget->texture = SDL_CreateTextureFromSurface( 0, surface );
 
 	SDL_FreeSurface( textdrawing );
@@ -61,14 +75,6 @@ void ui_setlabeltext( ui_widget *widget, char *text ) {
 	label->text[ length-1 ] = '\0';
 
 	widget->redraw = 1;
-}
-
-void ui_setlabeltextf( ui_widget *widget, char *format, ... ) {
-	va_list args;
-	va_start( args, format );
-	char str[500];
-	sprintf( str, format, args );
-	ui_setlabeltext( widget, str );
 }
 
 void ui_getlabeltext( ui_widget *widget, char **text ) {

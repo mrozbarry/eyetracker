@@ -59,6 +59,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="ui-slider.h" />
+		<Unit filename="ui-toggle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ui-toggle.h" />
 		<Unit filename="ui-webcam.c">
 			<Option compilerVar="CC" />
 		</Unit>
