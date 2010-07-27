@@ -17,6 +17,7 @@
   * Wire ties
   * Strong adhesive *OR* a mount system for the metal rod
     * I used epoxy (industrial glue, essentially), but if you could find a screw mount system for the rod, that would work, too, and be more adjustable)
+  * Electrical tape
 
 == Instructions ==
 _these are on their way, bare with me :)_
