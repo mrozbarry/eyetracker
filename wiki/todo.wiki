@@ -1,0 +1,6 @@
+#summary Project todo list
+
+  * Create a calibration system
+  * Create a page-based UI for eye interaction
+  * Create modules for add-in content (xml/dynamic libraries?)
+  * API documentation for people wanting to build their own custom version
