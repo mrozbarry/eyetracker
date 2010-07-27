@@ -20,8 +20,7 @@ The aim of this project is to have a UI interface, interacted through gaze/eye t
 This software includes calibration that does not account for head movement, meaning the head needs to remain fairly steady for the most optimal use.  To counteract this, instead of tracking a single eye point on the screen, like a mouse, this system uses rectangular interaction.  What this means is instead of looking at coordinate (100, 100) on the screen, you are looking in the box of (98, 98)-(102, 102).  The reason here is the eye tracking can be somewhat unstable, even when the head is quite study, so there is a slight jitter - by decreasing the pixel resolution to smaller boxes, the jitter can be minimized or even removed completely, depending on the rectangle resolution used.
 
 
-= Details =
-
-What still needs to be done: [todo]
-
-I have some questions: [faq]
+= Pages =
+  * [dyi Hardware Building Guide]
+  * [todo TO-Do List]
+  * [faq Frequently Asked Questions]
