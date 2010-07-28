@@ -22,5 +22,5 @@ This software includes calibration that does not account for head movement, mean
 
 = Pages =
   * [dyi Hardware Building Guide]
-  * [todo TO-Do List]
+  * [todo To-Do List]
   * [faq Frequently Asked Questions]
