@@ -1,4 +1,5 @@
 #summary How to build the hardware
+#labels Deprecated
 
 == Materials ==
   * A webcam
